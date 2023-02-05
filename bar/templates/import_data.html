@@ -1,0 +1,25 @@
+<form method="post" action="{% url 'import_data' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="file">
+    <input type="submit" value="Import">
+</form>
+
+<div id="progress-bar"></div>
+
+<script>
+    function checkProgress() {
+        $.ajax({
+            url: '/get_progress/',
+            success: function(data) {
+                $("#progress-bar").progressbar({value: data});
+                if (data < 100) {
+                    setTimeout(checkProgress, 1000);
+                }
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        checkProgress();
+    });
+</script>
